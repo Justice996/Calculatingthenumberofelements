@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态计算元素宽度</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 400px; /* 设置容器的宽度 */
+            max-height: 86px; /* 设置容器的最大高度 */
+            overflow: hidden; /* 隐藏溢出内容 */
+        }
+
+        .item {
+            height: 20px;
+            overflow: hidden;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="elementContainer">
+    <!-- 你的动态生成的元素放在这里 -->
+</div>
+
+<script>
+    // 模拟动态生成元素
+    for (let i = 1; i <= 10; i++) {
+        const width = Math.floor(Math.random() * 100) + 100; // 生成一个随机宽度
+        const element = document.createElement('div');
+        element.className = 'item';
+        element.style.width = `${width}px`;
+        element.textContent = `元素 ${i}`;
+        document.getElementById('elementContainer').appendChild(element);
+    }
+
+    // 获取容器和元素
+    const container = document.getElementById('elementContainer');
+    const containerWidth = container.offsetWidth; // 获取容器实际宽度
+    const containerHeight = container.offsetHeight; // 获取容器实际高度
+    const elements = container.getElementsByClassName('item');
+
+    // 计算元素总宽度
+    let totalWidth = 0; //每个元素的宽度
+    let hiddenElementsCount = 0; // 计算被隐藏的元素个数
+    let lineNumber=0; //行数
+    for (let i = 0; i < elements.length; i++) {
+        totalWidth += elements[i].offsetWidth;
+        if (totalWidth > containerWidth) {
+            lineNumber++;
+            totalWidth = elements[i].offsetWidth;
+        }
+        if(lineNumber>=2){
+            elements[i].style.visibility = 'hidden'; // 隐藏溢出的元素
+            hiddenElementsCount++;
+        }
+    }
+
+    console.log(`被隐藏的元素个数为 ${hiddenElementsCount}`);
+</script>
+</body>
+</html>
